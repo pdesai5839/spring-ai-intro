@@ -15,8 +15,8 @@ class OpenAIServiceImplTest {
 
     @Test
     void getAnswer() {
-        //String answer = openAIService.getAnswer("Write a Java class to reverse a String.");
-        String answer = openAIService.getAnswer("who is the king of england currently?");
+//        String answer = openAIService.getAnswer("Write a Java class to reverse a String.");
+        String answer = openAIService.getAnswer("Write the snake game in Java");
         log.info(answer);
     }
 }
