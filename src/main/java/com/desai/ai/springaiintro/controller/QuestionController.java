@@ -1,8 +1,6 @@
 package com.desai.ai.springaiintro.controller;
 
-import com.desai.ai.springaiintro.model.Answer;
-import com.desai.ai.springaiintro.model.Question;
-import com.desai.ai.springaiintro.model.GetCapitalRequest;
+import com.desai.ai.springaiintro.model.*;
 import com.desai.ai.springaiintro.service.OpenAIService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,14 +14,24 @@ public class QuestionController {
         this.openAIService = openAIService;
     }
 
-    @PostMapping("/capitalWithInfo")
-    public Answer getCapitalWithInfo(@RequestBody GetCapitalRequest getCapitalRequest) {
+    @PostMapping("/capitalWithInfoResponse")
+    public GetCapitalWithInfoResponse getCapitalWithInfoResponse(@RequestBody GetCapitalRequest getCapitalRequest) {
         return openAIService.getCapitalWithInfo(getCapitalRequest);
     }
 
+    @PostMapping("/capitalWithInfo")
+    public Answer getCapitalWithInfo2(@RequestBody GetCapitalRequest getCapitalRequest) {
+        return openAIService.getCapitalWithInfo2(getCapitalRequest);
+    }
+
     @PostMapping("/capital")
-    public Answer getCapital(@RequestBody GetCapitalRequest getCapitalRequest) {
+    public GetCapitalResponse getCapital(@RequestBody GetCapitalRequest getCapitalRequest) {
         return openAIService.getCapital(getCapitalRequest);
+    }
+
+    @PostMapping("/capital2")
+    public Answer getCapital2(@RequestBody GetCapitalRequest getCapitalRequest) {
+        return openAIService.getCapital2(getCapitalRequest);
     }
 
     @PostMapping("/ask")

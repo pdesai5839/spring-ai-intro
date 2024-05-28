@@ -1,8 +1,6 @@
 package com.desai.ai.springaiintro.service;
 
-import com.desai.ai.springaiintro.model.Answer;
-import com.desai.ai.springaiintro.model.GetCapitalRequest;
-import com.desai.ai.springaiintro.model.Question;
+import com.desai.ai.springaiintro.model.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -12,6 +10,7 @@ import org.springframework.ai.chat.ChatClient;
 import org.springframework.ai.chat.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
+import org.springframework.ai.parser.BeanOutputParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -49,7 +48,22 @@ public class OpenAIServiceImpl implements OpenAIService {
     }
 
     @Override
-    public Answer getCapital(GetCapitalRequest getCapitalRequest) {
+    public GetCapitalResponse getCapital(GetCapitalRequest getCapitalRequest) {
+        BeanOutputParser<GetCapitalResponse> parser = new BeanOutputParser<>(GetCapitalResponse.class);
+        String format = parser.getFormat();
+        log.info("Format = {}", format);
+
+        PromptTemplate promptTemplate = new PromptTemplate(getCapitalPrompt);
+        Prompt prompt = promptTemplate.create(Map.of("stateOrCountry", getCapitalRequest.stateOrCountry(),
+                "format", format));
+        ChatResponse response = chatClient.call(prompt);
+        return parser.parse(response.getResult().getOutput().getContent());
+
+    }
+
+    //uses jackson directly
+//    @Override
+    public Answer getCapital2(GetCapitalRequest getCapitalRequest) {
         PromptTemplate promptTemplate = new PromptTemplate(getCapitalPrompt);
         Prompt prompt = promptTemplate.create(Map.of("stateOrCountry", getCapitalRequest.stateOrCountry()));
         ChatResponse response = chatClient.call(prompt);
@@ -67,7 +81,19 @@ public class OpenAIServiceImpl implements OpenAIService {
     }
 
     @Override
-    public Answer getCapitalWithInfo(GetCapitalRequest getCapitalRequest) {
+    public GetCapitalWithInfoResponse getCapitalWithInfo(GetCapitalRequest getCapitalRequest) {
+        BeanOutputParser<GetCapitalWithInfoResponse> parser = new BeanOutputParser<>(GetCapitalWithInfoResponse.class);
+        String format = parser.getFormat();
+
+        PromptTemplate promptTemplate = new PromptTemplate(getCapitalPrompt);
+        Prompt prompt = promptTemplate.create(Map.of("stateOrCountry", getCapitalRequest.stateOrCountry(),
+                "format", format));
+        ChatResponse response = chatClient.call(prompt);
+        return parser.parse(response.getResult().getOutput().getContent());
+    }
+
+    @Override
+    public Answer getCapitalWithInfo2(GetCapitalRequest getCapitalRequest) {
         PromptTemplate promptTemplate = new PromptTemplate(getCapitalWithInfoPrompt);
         Prompt prompt = promptTemplate.create(Map.of("stateOrCountry", getCapitalRequest.stateOrCountry()));
         ChatResponse response = chatClient.call(prompt);
